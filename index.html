@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>200 New MCQs — Functional English</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:#f0f4fb;
+    color:#1b2333;
+    line-height:1.65;
+    font-size:17px;
+  }
+  header.topbar{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(135deg,#1e3a8a,#4c1d95);
+    color:#fff;padding:14px 20px;
+    display:flex;flex-wrap:wrap;gap:10px 20px;
+    align-items:center;justify-content:space-between;
+    box-shadow:0 3px 14px rgba(0,0,0,.25);
+  }
+  .brand{font-weight:700;font-size:1rem;letter-spacing:.3px}
+  .brand span{font-weight:400;opacity:.85;font-size:.82rem;display:block;margin-top:2px}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:.85rem}
+  .pill{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.25);
+    padding:5px 12px;border-radius:999px;white-space:nowrap;
+  }
+  .pill b{font-size:.95rem}
+  .pill.good{background:rgba(22,163,74,.35);border-color:rgba(22,163,74,.6)}
+  .pill.bad{background:rgba(220,38,38,.35);border-color:rgba(220,38,38,.6)}
+  button.reset{
+    background:#fff;color:#1e3a8a;border:none;font-weight:700;
+    padding:7px 16px;border-radius:999px;cursor:pointer;font-size:.82rem;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  button.reset:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+
+  main{max-width:960px;margin:0 auto;padding:22px 16px 90px}
+
+  .intro{
+    background:#fff;border-radius:14px;padding:18px 20px;margin-bottom:22px;
+    box-shadow:0 2px 10px rgba(30,58,138,.08);
+    border-left:6px solid #4c1d95;
+  }
+  .intro h1{margin:0 0 8px;font-size:1.2rem;color:#1e3a8a}
+  .intro p{margin:4px 0;font-size:.9rem;color:#44506b}
+
+  section.section{margin-bottom:34px}
+  section.section > h2{
+    font-size:1rem;color:#4c1d95;
+    background:#e7e2fa;border-radius:10px;
+    padding:11px 14px;margin:0 0 14px;
+    border-left:5px solid #7c3aed;
+  }
+
+  .q{
+    background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:14px;
+    box-shadow:0 2px 8px rgba(30,58,138,.07);
+    border:1px solid #e3e8f5;
+    transition:box-shadow .15s ease;
+  }
+  .q.answered{border-color:#cbd5e1}
+  .qtext{
+    margin:0 0 12px;font-weight:600;font-size:.96rem;color:#16203a;
+    display:flex;gap:8px;align-items:flex-start;
+  }
+  .num{
+    flex:0 0 auto;color:#4c1d95;font-weight:800;
+    background:#ede9fe;border-radius:6px;padding:0 7px;height:fit-content;
+    font-size:.8rem;line-height:1.6;
+  }
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{
+    text-align:left;width:100%;
+    background:#f7f9fd;border:1.5px solid #dde4f2;border-radius:9px;
+    padding:10px 13px;font-size:.9rem;color:#25314d;cursor:pointer;
+    font-family:inherit;display:flex;gap:10px;align-items:flex-start;
+    transition:background .13s ease,border-color .13s ease,transform .1s ease;
+  }
+  .opt:hover:not(:disabled){background:#eef3ff;border-color:#a5b4fc;transform:translateX(2px)}
+  .opt:disabled{cursor:default}
+  .letter{
+    flex:0 0 auto;font-weight:800;color:#4c1d95;font-size:.8rem;
+    background:#ede9fe;border-radius:5px;padding:1px 7px;line-height:1.6;
+  }
+  .opt.correct{background:#16a34a;border-color:#15803d;color:#fff}
+  .opt.correct .letter{background:rgba(255,255,255,.25);color:#fff}
+  .opt.wrong{background:#dc2626;border-color:#b91c1c;color:#fff}
+  .opt.wrong .letter{background:rgba(255,255,255,.25);color:#fff}
+  .opt.dim{opacity:.55}
+
+  .feedback{
+    margin-top:10px;font-size:.85rem;font-weight:700;display:none;
+  }
+  .feedback.show{display:block}
+  .feedback.ok{color:#15803d}
+  .feedback.no{color:#b91c1c}
+
+  footer.done{
+    position:fixed;bottom:0;left:0;right:0;
+    background:#1e3a8a;color:#fff;text-align:center;
+    padding:10px 14px;font-size:.85rem;font-weight:600;
+    box-shadow:0 -3px 12px rgba(0,0,0,.2);
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    200 New MCQs — Functional English
+    <span>Click an option — green = correct, red = wrong</span>
+  </div>
+  <div class="stats">
+    <div class="pill good">Score: <b id="score">0</b></div>
+    <div class="pill bad">Wrong: <b id="wrong">0</b></div>
+    <div class="pill">Answered: <b id="answered">0</b> / <b id="total">200</b></div>
+    <button class="reset" onclick="location.reload()">Reset All</button>
+  </div>
+</header>
+
+<main>
+  <div class="intro">
+    <h1>Interactive Revision Test — New Set</h1>
+    <p>18 sections covering sentence types, tenses, pronouns, articles, clauses, conjunctions, modifiers, adverbs, verbs, reading, word formation, and more.</p>
+    <p>When you pick an answer, the correct option turns <b style="color:#15803d">green</b> and a wrong pick turns <b style="color:#b91c1c">red</b>. The correct option is always revealed.</p>
+  </div>
+  <div id="quiz"></div>
+</main>
+
+<footer class="done" id="footer">Progress: 0 / 200 answered &nbsp;|&nbsp; Score: 0</footer>
+
+<script>
+/* ============================================================
+   DATA — 200 brand-new MCQs
+   Each: { q: "question", c: "correct answer", w: [wrong1, wrong2, wrong3] }
+   ============================================================ */
+const DATA = [
+
+{sec:"Section 1 — Types of Sentences (10 Qs)", q:[
+{q:"Which sentence type has exactly one independent clause?", c:"Simple", w:["Compound","Complex","Compound-complex"]},
+{q:"\"She laughed and cried at the same time\" — what type of sentence?", c:"Simple", w:["Compound","Complex","Compound-complex"]},
+{q:"How many independent clauses does a compound sentence have?", c:"Two or more", w:["One","Exactly two","Zero"]},
+{q:"Which connector is typically used in complex sentences?", c:"Because", w:["And","But","Or"]},
+{q:"A dependent clause cannot stand alone because it:", c:"Does not express a complete thought", w:["Has no verb","Has no subject","Is too short"]},
+{q:"\"Although it was raining, we went for a walk\" — sentence type?", c:"Complex", w:["Simple","Compound","Compound-complex"]},
+{q:"\"The dog barked, and the cat ran away\" — sentence type?", c:"Compound", w:["Simple","Complex","Compound-complex"]},
+{q:"What joins two independent clauses in a compound sentence?", c:"Coordinating conjunction, punctuation, or both", w:["Subordinating conjunction","Relative pronoun","Preposition"]},
+{q:"\"I know that she is smart, and she knows that I am hardworking\" — sentence type?", c:"Compound-complex", w:["Simple","Compound","Complex"]},
+{q:"Which sentence type contains at least one dependent clause?", c:"Complex and compound-complex", w:["Simple","Compound","Only compound"]}
+]},
+
+{sec:"Section 2 — Simple Future Tense (11 Qs)", q:[
+{q:"\"I will make some sandwiches\" — use of will?", c:"Voluntary action", w:["Promise","Prior plan","Concrete evidence"]},
+{q:"Which is used for a spontaneous decision?", c:"Will", w:["Be going to","Present continuous","Past simple"]},
+{q:"\"I'm sure he will succeed on the test\" — what does this express?", c:"A prediction with certainty", w:["A prior plan","Concrete evidence","A fixed arrangement"]},
+{q:"Negative form of \"She will call me\" is:", c:"She will not call me", w:["She doesn't will call me","She not will call me","She will no call me"]},
+{q:"Which is NOT a time expression for future simple?", c:"Yesterday", w:["Tomorrow","Soon","Next week"]},
+{q:"\"Don't worry. He will be here ___.\"", c:"soon", w:["yesterday","last week","ago"]},
+{q:"\"There will be another meeting ___.\"", c:"next month", w:["last month","two days ago","yesterday"]},
+{q:"\"I will finish my report ___.\"", c:"later today", w:["yesterday","last night","ago"]},
+{q:"Which sentence uses \"be going to\" correctly?", c:"She is going to visit her aunt", w:["She is going to visits her aunt","She going to visit her aunt","She is go to visit her aunt"]},
+{q:"\"Sarah isn't going to visit her aunt on Friday\" — this is:", c:"Negative form of \"be going to\"", w:["Positive form","Question form","Past tense"]},
+{q:"\"Are you going to be a teacher?\" — this is:", c:"Yes/No question", w:["Wh- question","Negative","Statement"]}
+]},
+
+{sec:"Section 3 — Pronouns (14 Qs)", q:[
+{q:"The historical origin of \"pronoun\" dates to which century?", c:"Mid-15th century", w:["10th century","13th century","18th century"]},
+{q:"Which is a third person singular masculine pronoun?", c:"He", w:["She","It","They"]},
+{q:"\"Her\" is used as:", c:"Both a possessive and objective pronoun", w:["Only a possessive pronoun","Only an objective pronoun","Only a subjective pronoun"]},
+{q:"Generic gender pronouns include:", c:"His, Her", w:["He, Him","She, Her","It, Its"]},
+{q:"\"I own it\" — \"it\" is in which case?", c:"Objective", w:["Subjective","Possessive","Nominative"]},
+{q:"\"The doctor told me I will be fine\" — \"me\" is:", c:"Objective", w:["Subjective","Possessive","Generic"]},
+{q:"\"Should the pen be his, the book is ours\" — \"his\" and \"ours\" are:", c:"Possessive pronouns", w:["Personal pronouns","Reflexive pronouns","Relative pronouns"]},
+{q:"\"Meet my son in whom I am well pleased\" — \"whom\" is a:", c:"Relative pronoun", w:["Personal pronoun","Reflexive pronoun","Demonstrative pronoun"]},
+{q:"\"They themselves are the evil doers\" — \"themselves\" is:", c:"Reflexive", w:["Personal","Possessive","Reciprocal"]},
+{q:"\"Excuse me gentleman, those boots are not yours\" — \"those\" is:", c:"Demonstrative", w:["Personal","Interrogative","Indefinite"]},
+{q:"\"Which of the clothes are yours?\" — \"which\" is:", c:"Interrogative", w:["Relative","Demonstrative","Indefinite"]},
+{q:"\"Students don't read anything lengthy\" — \"anything\" is:", c:"Partitive", w:["Personal","Reflexive","Demonstrative"]},
+{q:"\"Everything gets change with time\" — \"everything\" is:", c:"Indefinite", w:["Partitive","Relative","Reciprocal"]},
+{q:"\"John and Mary love each other\" — \"each other\" is:", c:"Reciprocal", w:["Reflexive","Demonstrative","Indefinite"]}
+]},
+
+{sec:"Section 4 — Articles (12 Qs)", q:[
+{q:"An article is a word used to modify a:", c:"Noun", w:["Verb","Adverb","Adjective"]},
+{q:"\"A book is something you read\" — \"a\" is used because:", c:"Singular countable noun used as an example of a class", w:["Book is uncountable","Book is proper","It's mentioned a second time"]},
+{q:"\"He became a famous actor\" — \"a\" is used with:", c:"A noun complement", w:["A plural noun","An uncountable noun","A verb"]},
+{q:"\"A dozen, a hundred\" — \"a\" is used in:", c:"Certain numerical expressions", w:["Expressions of price","Exclamations","Superlatives"]},
+{q:"\"4 hours a day\" — \"a\" is used in expressions of:", c:"Price, speed, ratio", w:["Time only","Emotion","Frequency only"]},
+{q:"\"A Mr. Brown phoned today\" — \"a\" is placed before:", c:"Titles + surname", w:["Only first names","Only last names","No names"]},
+{q:"\"The women dressed in black\" — \"the\" is used before a noun made definite by:", c:"Addition of a phrase or clause", w:["Being mentioned first time","Being plural","Being abstract"]},
+{q:"\"There's a bee in the kitchen\" — \"the\" is used because:", c:"By reason of locality, it represents only one particular thing", w:["Kitchen is mentioned first time","Kitchen is plural","Kitchen is uncountable"]},
+{q:"\"The donkey is a very obstinate animal\" — \"the\" is used before:", c:"Singular nouns used to represent a class of objects", w:["Plural nouns","Uncountable nouns","Proper nouns"]},
+{q:"\"That tax hurts the rich\" — \"the\" is used before:", c:"An adjective used to represent a class of persons", w:["A verb","A proper noun","A plural noun"]},
+{q:"\"The Pacific Ocean, the Thames, the Andes\" — \"the\" is used before:", c:"Names of seas, rivers, chains of mountains", w:["Names of cities","Names of people","Names of days"]},
+{q:"The indefinite article tells us something is:", c:"Non-specific", w:["Specific","Proper","Plural"]}
+]},
+
+{sec:"Section 5 — Fragments & Run-ons (12 Qs)", q:[
+{q:"A sentence must express:", c:"A complete thought", w:["A partial thought","A single word","Only a subject"]},
+{q:"\"Working full-time while going to school is difficult\" — the subject is:", c:"Working full-time while going to school", w:["Working","school","difficult"]},
+{q:"A fragment usually is missing a:", c:"Subject or predicate", w:["Only subject","Only predicate","Only object"]},
+{q:"\"Whenever you're ready...\" is a:", c:"Fragment", w:["Complete sentence","Run-on","Compound sentence"]},
+{q:"\"Women working in the computer science field...\" is a:", c:"Participial phrase fragment", w:["Complete sentence","Run-on","Complex sentence"]},
+{q:"\"On that morning I sat in my usual spot, on the old wooden chair in the corner of my grandmother's kitchen\" — how was the fragment fixed?", c:"By pulling/attaching into a nearby sentence", w:["By adding a period","By adding a semicolon","By adding a conjunction"]},
+{q:"\"They\" was added before \"immediately popped their flares\" — how was the fragment fixed?", c:"Turned into a sentence by adding a subject", w:["Attached to nearby sentence","Added a comma","Added a period"]},
+{q:"\"Gestures are a means of communication for everyone, they are essential for the hearing-impaired\" — this is a:", c:"Comma splice", w:["Fragment","Correct sentence","Complex sentence"]},
+{q:"A run-on with no punctuation at all is called:", c:"Fused sentence", w:["Comma splice","Fragment","Complex sentence"]},
+{q:"Which is NOT one of the 4 fixes for run-ons?", c:"Add a comma only", w:["Comma + coordinating conjunction","Semicolon + transitional expression","Make clauses into separate sentences"]},
+{q:"\"Gestures are a means of communication for everyone; however, they are essential...\" — this fix uses:", c:"Semicolon + transitional expression", w:["Comma + conjunction","Separate sentences","Restructuring"]},
+{q:"\"Although gestures are a means of communication for everyone, they are essential...\" — this fix uses:", c:"Restructuring", w:["Comma + conjunction","Semicolon","Separate sentences"]}
+]},
+
+{sec:"Section 6 — Nouns (12 Qs)", q:[
+{q:"A noun is a part of speech that names:", c:"A person, place, thing, idea, action, or quality", w:["Only a person","Only a place","Only a thing"]},
+{q:"Which is a proper noun?", c:"Paris", w:["team","friendship","house"]},
+{q:"Which is an abstract noun?", c:"sadness", w:["computer","hand","house"]},
+{q:"Which is a collective noun?", c:"flock", w:["London","democracy","table"]},
+{q:"Which is a concrete noun?", c:"hand", w:["friendship","sadness","democracy"]},
+{q:"Count nouns:", c:"Can be pluralized", w:["Cannot be counted","Have no plural form","Are always abstract"]},
+{q:"Non-count nouns:", c:"Have no plural form", w:["Can be pluralized","Are always concrete","Are always proper"]},
+{q:"\"Birds, trees\" are:", c:"Count nouns", w:["Non-count nouns","Abstract nouns","Collective nouns"]},
+{q:"\"Courage, rugby, rice\" are:", c:"Non-count nouns", w:["Count nouns","Proper nouns","Collective nouns"]},
+{q:"\"Team, community, flock\" are:", c:"Collective", w:["Proper","Abstract","Count"]},
+{q:"\"Friendship, sadness, democracy\" are:", c:"Abstract", w:["Concrete","Collective","Proper"]},
+{q:"\"Computer, hand, house\" are:", c:"Concrete", w:["Abstract","Collective","Proper"]}
+]},
+
+{sec:"Section 7 — Prepositions (10 Qs)", q:[
+{q:"Prepositions explain relationships of:", c:"Sequence, space, and logic", w:["Only time","Only place","Only manner"]},
+{q:"\"Alex threw a stone into the pond\" — \"into\" is a preposition of:", c:"Place/direction", w:["Time","Agent","Manner"]},
+{q:"\"The present is inside the box\" — \"inside\" is a preposition of:", c:"Place", w:["Time","Agent","Manner"]},
+{q:"\"They have gone out of the town\" — \"out of\" is a preposition of:", c:"Place/direction", w:["Time","Agent","Manner"]},
+{q:"Which is NOT a linguistic fact about prepositions?", c:"They change form frequently", w:["They are a closed class of words","They cannot be plural, possessive, or inflected","They have many contextual uses"]},
+{q:"\"The company called meeting on 25 October\" — \"on\" is a preposition of:", c:"Time", w:["Place","Agent","Direction"]},
+{q:"\"There is a holiday in December\" — \"in\" is a preposition of:", c:"Time", w:["Place","Agent","Direction"]},
+{q:"\"He has been ill since Monday\" — \"since\" is a preposition of:", c:"Time", w:["Place","Agent","Direction"]},
+{q:"\"He came from England\" — \"from\" is a preposition of:", c:"Place/direction", w:["Time","Agent","Manner"]},
+{q:"\"He is playing with his brothers\" — \"with\" is a preposition of:", c:"Agent/thing", w:["Time","Place","Direction"]}
+]},
+
+{sec:"Section 8 — Modifiers (11 Qs)", q:[
+{q:"Modifiers make other words:", c:"More specific", w:["Vague","Confusing","Longer"]},
+{q:"Modifiers can modify nouns by giving extra information about:", c:"Type or qualities", w:["Only size","Only color","Only shape"]},
+{q:"\"The seats were comfy\" — \"comfy\" modifies:", c:"seats", w:["were","the","none"]},
+{q:"\"I have lots of pillows like the ones in the magazine\" — \"like the ones in the magazine\" is an:", c:"Adjectival phrase", w:["Adverbial phrase","Noun phrase","Verb phrase"]},
+{q:"\"The notebook that I write all my dreams in is missing\" — the adjective clause modifies:", c:"notebook", w:["write","dreams","missing"]},
+{q:"\"Daniel carefully coloured in his picture\" — \"carefully\" is:", c:"Adverb", w:["Adjective","Noun","Verb"]},
+{q:"\"She ate her dessert slowly\" — \"slowly\" describes:", c:"ate", w:["She","dessert","her"]},
+{q:"\"The cheetah ran quickly\" — \"quickly\" describes:", c:"ran", w:["cheetah","the","none"]},
+{q:"Adverbs answer questions like:", c:"How? Where? When?", w:["Only how","Only when","Only where"]},
+{q:"Adverbs often end with:", c:"-ly", w:["-ed","-ing","-ness"]},
+{q:"\"She fell gracefully\" — \"gracefully\" describes:", c:"fell", w:["She","none","both"]}
+]},
+
+{sec:"Section 9 — Verbs (14 Qs)", q:[
+{q:"A verb informs about:", c:"Action, existence of something, or occurrence", w:["Only action","Only existence","Only occurrence"]},
+{q:"\"Azhar walks\" — \"walks\" is a:", c:"Main verb", w:["Helping verb","Linking verb","Modal verb"]},
+{q:"\"The horse neighs\" — \"neighs\" is:", c:"Intransitive", w:["Transitive","Linking","Helping"]},
+{q:"\"The monkey jumps\" — \"jumps\" is:", c:"Intransitive", w:["Transitive","Linking","Modal"]},
+{q:"\"The teacher made the question paper\" — \"made\" is:", c:"Transitive", w:["Intransitive","Linking","Helping"]},
+{q:"\"They are playing football\" — \"are playing\" is:", c:"Transitive", w:["Intransitive","Linking","Modal"]},
+{q:"\"Ms. Rehana speaks loudly\" — \"speaks\" is:", c:"Intransitive", w:["Transitive","Linking","Helping"]},
+{q:"\"She is driving carefully\" — \"is driving\" is:", c:"Intransitive", w:["Transitive","Linking","Modal"]},
+{q:"\"Rehana speaks English\" — \"speaks\" is:", c:"Transitive", w:["Intransitive","Linking","Helping"]},
+{q:"\"I want to be an astronaut\" — the infinitive is:", c:"to be", w:["want","astronaut","I"]},
+{q:"\"Shane asked to have another hamburger\" — the infinitive is:", c:"to have", w:["asked","hamburger","another"]},
+{q:"\"The manager promised to hold the job for me\" — the main verb is:", c:"promised", w:["to hold","job","manager"]},
+{q:"\"Try to sleep a little more\" — the main verb is:", c:"try", w:["to sleep","more","little"]},
+{q:"\"Chuck hopes to spend less than $30\" — the main verb is:", c:"hopes", w:["to spend","$30","less"]}
+]},
+
+{sec:"Section 10 — Reading (10 Qs)", q:[
+{q:"Comprehension is an:", c:"Active process", w:["Passive process","Automatic process","Optional process"]},
+{q:"In literal reading, the reader needs to understand ideas:", c:"Explicitly stated", w:["Implied","Criticized","Evaluated"]},
+{q:"Literal reading includes:", c:"Recognizing and recalling facts", w:["Evaluating the author's reasoning","Judging the author's point of view","Predicting outcomes"]},
+{q:"Inferential reading uses help from:", c:"Main ideas, supporting details, sequence, cause-effect", w:["Only facts","Only opinions","Only vocabulary"]},
+{q:"Inferential reading involves interpreting:", c:"Figurative language like similes and idioms", w:["Only literal language","Only facts","Only numbers"]},
+{q:"Critical reading requires a:", c:"High level of comprehension", w:["Low level of comprehension","Medium level of comprehension","No comprehension"]},
+{q:"Critical reading evaluates:", c:"Quality, values of writing, author's reasoning", w:["Only facts","Only grammar","Only spelling"]},
+{q:"Skimming is used to:", c:"Get the general meaning of the text", w:["Find specific information","Memorize facts","Evaluate arguments"]},
+{q:"Scanning involves:", c:"Quick eye movement until the reader finds the desired piece of information", w:["Linear reading only","Slow reading","Reading every word"]},
+{q:"A \"WHAT'S ON TV\" section is an example of:", c:"Scanning", w:["Skimming","Critical reading","Literal reading"]}
+]},
+
+{sec:"Section 11 — Word Formation (14 Qs)", q:[
+{q:"A word is the smallest unit of grammar that can:", c:"Stand alone as a complete utterance", w:["Be broken down","Only be written","Only be spoken"]},
+{q:"Etymology comes from Latin but has:", c:"Greek roots", w:["French roots","German roots","Spanish roots"]},
+{q:"Words can be born in:", c:"Many ways", w:["Only one way","Only two ways","Only through borrowing"]},
+{q:"Loanwords make up over what percentage of English?", c:"80%", w:["50%","60%","70%"]},
+{q:"\"Yogurt\" is borrowed from:", c:"Turkish", w:["Arabic","Dutch","Chinese"]},
+{q:"\"Sofa\" is borrowed from:", c:"Arabic", w:["Turkish","Spanish","German"]},
+{q:"\"Sketch, waffle, leak\" are borrowed from:", c:"Dutch", w:["German","French","Spanish"]},
+{q:"\"Silk, catsup\" are borrowed from:", c:"Chinese", w:["Japanese","Arabic","Turkish"]},
+{q:"\"Frankfurter, kindergarten\" are borrowed from:", c:"German", w:["French","Dutch","Spanish"]},
+{q:"\"Kimono, judo\" are borrowed from:", c:"Japanese", w:["Chinese","Turkish","Arabic"]},
+{q:"\"Crash, bang, hush\" are:", c:"Echoic words", w:["Loanwords","Compound words","Acronyms"]},
+{q:"\"Ticktack\" is an example of:", c:"Echoic word", w:["Loanword","Compound word","Blend"]},
+{q:"Acronyms are pronounced as:", c:"New single words", w:["Individual letters","Two words","Silent"]},
+{q:"\"RADAR\" stands for:", c:"Radio detecting and ranging", w:["Radio and detection ranging","Random access detection and ranging","Rapid detection and ranging"]}
+]},
+
+{sec:"Section 12 — Clauses (12 Qs)", q:[
+{q:"A clause may stand as:", c:"A simple sentence", w:["Only a fragment","Only a phrase","Only a word"]},
+{q:"A sentence consists of how many clauses?", c:"One, two, or more", w:["Only one","Only two","Only three"]},
+{q:"\"He is sleeping\" — how many clauses?", c:"One", w:["Two","Three","Zero"]},
+{q:"\"I am happy, because I won a prize\" — how many clauses?", c:"Two", w:["One","Three","Zero"]},
+{q:"\"I like Mathematics, but my brother likes Biology, because he wants to become a doctor\" — how many clauses?", c:"Three", w:["One","Two","Four"]},
+{q:"A main clause is normally referred to as a:", c:"Simple sentence", w:["Fragment","Phrase","Word"]},
+{q:"A noun clause starts with words like:", c:"that, what, whatever, who, whom, whoever, whomever", w:["and, but, or","because, although, since","however, therefore"]},
+{q:"\"Whatever you learn will help you in future\" — \"Whatever you learn\" is a:", c:"Noun clause (as subject)", w:["Adjective clause","Adverb clause","Main clause"]},
+{q:"\"He knows that he will pass the test\" — \"that he will pass the test\" is a:", c:"Noun clause (as object)", w:["Adjective clause","Adverb clause","Main clause"]},
+{q:"\"An apple that smells bad is rotten\" — \"that smells bad\" is an:", c:"Adjective clause", w:["Noun clause","Adverb clause","Main clause"]},
+{q:"\"The house where I live consists of four rooms\" — \"where I live\" is an:", c:"Adjective clause", w:["Noun clause","Adverb clause","Main clause"]},
+{q:"\"You are safe as long as you drive carefully\" — \"as long as you drive carefully\" is an:", c:"Adverb clause (condition)", w:["Noun clause","Adjective clause","Main clause"]}
+]},
+
+{sec:"Section 13 — Conjunctions (10 Qs)", q:[
+{q:"A conjunction is a:", c:"Part of speech used to connect words, phrases, clauses, or sentences", w:["Noun","Verb","Adjective"]},
+{q:"\"I have two goldfish and a cat\" — \"and\" is a:", c:"Coordinating conjunction", w:["Subordinating conjunction","Correlative conjunction","Conjunctive adverb"]},
+{q:"\"I'll go shopping, or I'll go camping\" — \"or\" is a:", c:"Coordinating conjunction", w:["Subordinating conjunction","Correlative conjunction","Conjunctive adverb"]},
+{q:"\"She does not like having milk nor eggs\" — \"nor\" is a:", c:"Coordinating conjunction", w:["Subordinating conjunction","Correlative conjunction","Conjunctive adverb"]},
+{q:"\"He took to the stage as though he had been preparing\" — \"as though\" is a:", c:"Subordinating conjunction", w:["Coordinating conjunction","Correlative conjunction","Conjunctive adverb"]},
+{q:"\"Whether you win this race or lose it doesn't matter\" — \"whether...or\" is a:", c:"Correlative conjunction", w:["Coordinating conjunction","Subordinating conjunction","Conjunctive adverb"]},
+{q:"\"both...and\" is an example of:", c:"Correlative", w:["Coordinating","Subordinating","Conjunctive adverb"]},
+{q:"\"neither...nor\" is an example of:", c:"Correlative", w:["Coordinating","Subordinating","Conjunctive adverb"]},
+{q:"\"as...as\" is an example of:", c:"Correlative", w:["Coordinating","Subordinating","Conjunctive adverb"]},
+{q:"\"however, moreover, nevertheless\" are:", c:"Conjunctive adverbs", w:["Coordinating conjunctions","Subordinating conjunctions","Correlative conjunctions"]}
+]},
+
+{sec:"Section 14 — Subject-Verb Agreement (10 Qs)", q:[
+{q:"\"A hen lays eggs\" — \"lays\" is:", c:"Singular verb", w:["Plural verb","Helping verb","Modal verb"]},
+{q:"\"The children follow the Pied Piper\" — \"follow\" is:", c:"Plural verb", w:["Singular verb","Helping verb","Modal verb"]},
+{q:"Singular of \"fly\" is:", c:"flies", w:["fly","flying","flew"]},
+{q:"Plural of \"goes\" is:", c:"go", w:["goes","going","went"]},
+{q:"\"I ___ feeling excited\" — correct form of \"to be\":", c:"am", w:["is","are","were"]},
+{q:"\"He ___ very gentle\" — correct form:", c:"is", w:["are","am","were"]},
+{q:"\"They ___ playing all day\" — correct form:", c:"are", w:["is","was","am"]},
+{q:"\"You ___ all in deep trouble\" — correct form:", c:"are", w:["is","was","am"]},
+{q:"\"Mum and Carol ___ certain\" — correct form:", c:"were", w:["is","was","am"]},
+{q:"\"We ___ going on holiday\" — correct form:", c:"are", w:["is","am","was"]}
+]},
+
+{sec:"Section 15 — Interjections (10 Qs)", q:[
+{q:"Interjections are inserted into:", c:"Regular speech", w:["Only formal writing","Only academic essays","Only scientific papers"]},
+{q:"Interjections are a brief and abrupt:", c:"Pause in speech for expressing emotions", w:["Sentence","Paragraph","Word class"]},
+{q:"For formal speech or writing, using interjections is:", c:"Not appropriate", w:["Required","Preferred","Mandatory"]},
+{q:"\"She said she's a millionaire? Indeed!\" — \"Indeed\" is an:", c:"Interjection", w:["Adverb","Conjunction","Preposition"]},
+{q:"\"Good! Now we can celebrate the party\" — \"Good\" is an:", c:"Interjection", w:["Adjective","Adverb","Noun"]},
+{q:"\"Aw, I did not want them to come\" — \"Aw\" expresses:", c:"Sorrow/disappointment", w:["Joy","Attention","Approval"]},
+{q:"\"What? You never told me that!\" — \"What\" expresses:", c:"Surprise", w:["Joy","Sorrow","Approval"]},
+{q:"\"Nah, we are not going\" — \"Nah\" expresses:", c:"No", w:["Yes","Surprise","Joy"]},
+{q:"\"Hey! Will you give me that ball?\" — \"Hey\" is used for:", c:"Greeting/attention", w:["Sorrow","Joy","Approval"]},
+{q:"\"Yoo-hoo! Is there anyone?\" — \"Yoo-hoo\" is used for:", c:"Attention", w:["Sorrow","Joy","Approval"]}
+]},
+
+{sec:"Section 16 — Adverbs (12 Qs)", q:[
+{q:"Adverbs add a description to make the sentence:", c:"More detailed and interesting", w:["Shorter","Confusing","Simpler"]},
+{q:"\"Ali moved quite slowly down the aisle\" — \"slowly\" modifies:", c:"moved", w:["Ali","quite","aisle"]},
+{q:"\"I'll call you from home later\" — \"later\" is an adverb of:", c:"Time", w:["Place","Manner","Degree"]},
+{q:"\"I went market yesterday\" — \"yesterday\" is an adverb of:", c:"Time", w:["Place","Manner","Frequency"]},
+{q:"\"Birds sang cheerfully in the trees\" — \"cheerfully\" is an adverb of:", c:"Manner", w:["Time","Place","Degree"]},
+{q:"\"The buildings are artistically lit\" — \"artistically\" is an adverb of:", c:"Manner", w:["Time","Place","Frequency"]},
+{q:"\"She started work here last month\" — \"here\" is an adverb of:", c:"Place", w:["Time","Manner","Degree"]},
+{q:"\"I am extremely sorry\" — \"extremely\" is an adverb of:", c:"Degree", w:["Time","Place","Manner"]},
+{q:"\"He always wears a shirt and tie\" — \"always\" is an adverb of:", c:"Frequency", w:["Time","Place","Manner"]},
+{q:"\"She normally eats three meals a day\" — \"normally\" is an adverb of:", c:"Frequency", w:["Time","Place","Manner"]},
+{q:"\"I usually buy all my vegetables at the market\" — \"usually\" is an adverb of:", c:"Frequency", w:["Time","Place","Manner"]},
+{q:"Adverbs of frequency tell us:", c:"How often we do things", w:["When something happens","Where something happens","How something happens"]}
+]},
+
+{sec:"Section 17 — Vocabulary (6 Qs)", q:[
+{q:"\"People in sedentary occupations, such as driving a taxi or writing books...\" — \"sedentary\" means:", c:"Involving much sitting", w:["Active","Well-paid","Artistic"]},
+{q:"\"Researchers have taken only a cursory look at the data\" — \"cursory\" means:", c:"Done rapidly and often superficially", w:["Done slowly","Done with detail","Done carefully"]},
+{q:"\"To avoid making rash decisions, you should wait\" — \"rash\" means:", c:"Too quick and without thinking about the result", w:["Slow","Thoughtful","Careful"]},
+{q:"Idioms have a meaning that is:", c:"Not deducible from the individual words", w:["Directly deducible from the words","Always literal","Always obvious"]},
+{q:"Synonyms are often featured in:", c:"Many competitive exams", w:["Only novels","Only poetry","Only newspapers"]},
+{q:"Antonyms are:", c:"Words with opposite meanings", w:["Words with similar meanings","Words with no meaning","Words with multiple meanings"]}
+]},
+
+{sec:"Section 18 — Present Tense (10 Qs)", q:[
+{q:"\"My father works as a shop assistant\" — present simple used for:", c:"Things true for a long time", w:["Habits","Future plans","Past events"]},
+{q:"\"I'm not working\" — this is:", c:"Negative form of present continuous", w:["Positive form","Question form","Past tense"]},
+{q:"\"Are you working?\" — this is:", c:"Question form", w:["Positive form","Negative form","Past tense"]},
+{q:"\"I have lived here for five years\" — \"have lived\" is:", c:"Present perfect simple", w:["Present simple","Present continuous","Present perfect continuous"]},
+{q:"\"She has lived\" — \"has lived\" is:", c:"Present perfect simple", w:["Present simple","Present continuous","Present perfect continuous"]},
+{q:"\"I have been living\" — \"have been living\" is:", c:"Present perfect continuous", w:["Present simple","Present continuous","Present perfect simple"]},
+{q:"\"Has she been living?\" — this is:", c:"Question form", w:["Positive form","Negative form","Past tense"]},
+{q:"\"I haven't lived\" — this is:", c:"Negative form", w:["Positive form","Question form","Past tense"]},
+{q:"\"I've read that book\" — present perfect simple used to emphasize:", c:"Activity is finished", w:["Activity is not finished","Activity is temporary","Activity is repeated"]},
+{q:"\"She's been trying to pass her driving test for years\" — present perfect continuous used to emphasize:", c:"Activity is long/repeated", w:["Activity is finished","Activity is short","Activity is temporary"]}
+]}
+
+];
+
+/* ============================================================
+   RENDER + INTERACTIVITY
+   ============================================================ */
+const quizEl     = document.getElementById('quiz');
+const scoreEl    = document.getElementById('score');
+const wrongEl    = document.getElementById('wrong');
+const answeredEl = document.getElementById('answered');
+const totalEl    = document.getElementById('total');
+const footerEl   = document.getElementById('footer');
+
+const LETTERS = ['A','B','C','D'];
+let totalQuestions = 0, answeredCount = 0, correctCount = 0, wrongCount = 0;
+
+DATA.forEach(s => { totalQuestions += s.q.length; });
+totalEl.textContent = totalQuestions;
+
+let qNumber = 0;
+
+// Fisher-Yates shuffle
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+DATA.forEach(section => {
+  const sec = document.createElement('section');
+  sec.className = 'section';
+
+  const h2 = document.createElement('h2');
+  h2.textContent = section.sec;
+  sec.appendChild(h2);
+
+  section.q.forEach(item => {
+    qNumber++;
+
+    const card = document.createElement('div');
+    card.className = 'q';
+
+    const p = document.createElement('p');
+    p.className = 'qtext';
+    const numSpan = document.createElement('span');
+    numSpan.className = 'num';
+    numSpan.textContent = qNumber;
+    const txtSpan = document.createElement('span');
+    txtSpan.textContent = item.q;
+    p.appendChild(numSpan);
+    p.appendChild(txtSpan);
+    card.appendChild(p);
+
+    // Build shuffled options: correct + wrongs
+    const opts = shuffle([
+      {text: item.c, correct: true},
+      ...item.w.map(t => ({text: t, correct: false}))
+    ]);
+
+    const optsWrap = document.createElement('div');
+    optsWrap.className = 'opts';
+
+    const fb = document.createElement('div');
+    fb.className = 'feedback';
+
+    const buttons = [];
+
+    opts.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.type = 'button';
+
+      const letter = document.createElement('span');
+      letter.className = 'letter';
+      letter.textContent = LETTERS[idx];
+
+      const label = document.createElement('span');
+      label.textContent = opt.text;
+
+      btn.appendChild(letter);
+      btn.appendChild(label);
+
+      btn.addEventListener('click', () => {
+        // lock all buttons in this question
+        buttons.forEach(b => { b.disabled = true; });
+
+        if (opt.correct) {
+          btn.classList.add('correct');
+          correctCount++;
+          fb.className = 'feedback ok show';
+          fb.textContent = '✓ Correct!';
+        } else {
+          btn.classList.add('wrong');
+          wrongCount++;
+          // highlight the correct one green
+          buttons.forEach(b => {
+            if (b.dataset.correct === 'true') b.classList.add('correct');
+          });
+          fb.className = 'feedback no show';
+          fb.textContent = '✗ Incorrect — the correct answer is: ' + item.c;
+        }
+
+        answeredCount++;
+        card.classList.add('answered');
+        updateStats();
+      });
+
+      btn.dataset.correct = opt.correct ? 'true' : 'false';
+      buttons.push(btn);
+      optsWrap.appendChild(btn);
+    });
+
+    card.appendChild(optsWrap);
+    card.appendChild(fb);
+    sec.appendChild(card);
+  });
+
+  quizEl.appendChild(sec);
+});
+
+function updateStats(){
+  scoreEl.textContent    = correctCount;
+  wrongEl.textContent    = wrongCount;
+  answeredEl.textContent = answeredCount;
+  footerEl.textContent =
+    'Progress: ' + answeredCount + ' / ' + totalQuestions + ' answered' +
+    '  |  Correct: ' + correctCount +
+    '  |  Wrong: ' + wrongCount;
+}
+updateStats();
+</script>
+</body>
+</html>
